@@ -1,0 +1,722 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+- url: https://localhost:8080
+- url: http://localhost:8080
+tags:
+- name: KeySSI Notifications
+  description: Pub/Sub notification system that uses AnchorId as channel name.
+  externalDocs:
+    description: Find out more
+    url: https://privatesky.xyz
+- name: KeySSI Message Queue
+  description: Message queues system that ensures that a message gets deliveried.
+  externalDocs:
+    description: Find out more
+    url: https://privatesky.xyz
+- name: Anchoring Service
+  description: Service that facilitate the anchoring process
+  externalDocs:
+    description: Find out more
+    url: https://privatesky.xyz
+- name: Brick Storage
+  description: Storage Service for all the bricks generated from DSUs
+  externalDocs:
+    description: Find out more
+    url: https://privatesky.xyz
+- name: APIHub Authentication
+  description: Authentication service
+  externalDocs:
+    description: Find out more
+    url: https://privatesky.xyz
+- name: Bricks Ledger
+  description: Ledger Service to notarize all the anchoring commands from DSUs
+  externalDocs:
+    description: Find out more
+    url: https://privatesky.xyz
+paths:
+  /notifications/subscribe/{anchorId}:
+    get:
+      tags:
+      - KeySSI Notifications
+      summary: Request to get notified each time a new anchor of a DSU is successfuly
+        added. This endpoint enables Long Pooling request sequences.
+      operationId: createSubscription
+      parameters:
+      - name: anchorId
+        in: path
+        description: AnchorId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: authToken
+        in: query
+        description: empty, JWT, oauth, etc.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: subscriberId
+        in: query
+        description: SubscriberId can be empty first time
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        description: Timeout value to keep a notification waiting for the subscriber
+          request. Valid only when subscriberID is empty
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: returns a list of versions of the AnchorId
+        "400":
+          description: Wrong request format
+      x-swagger-router-controller: KeySSINotifications
+  /notifications/unsubscribe/{anchorId}:
+    delete:
+      tags:
+      - KeySSI Notifications
+      summary: Delete subscription from AnchorId notifications
+      operationId: deleteSubscription
+      parameters:
+      - name: anchorId
+        in: path
+        description: AnchorId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: authToken
+        in: query
+        description: empty, JWT, oauth, etc.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: subscriberId
+        in: query
+        description: SubscriberId
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: returns a list of versions of the AnchorId
+        "400":
+          description: Wrong request format
+      x-swagger-router-controller: KeySSINotifications
+  /notifications/publish/{anchorId}:
+    put:
+      tags:
+      - KeySSI Notifications
+      summary: Publish notifications to a subscribers list identified by AnchorId
+      description: After a new version is anchored a notification will be sent to
+        those that subscribed using AnchorId.
+      operationId: publishNotification
+      parameters:
+      - name: anchorId
+        in: path
+        description: Identifier of the subscribers list that needs to get notified
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: authToken
+        in: query
+        description: empty, JWT, oauth, etc.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: notification
+        in: query
+        description: notification message
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Notification received
+        "404":
+          description: Subscribers list not found
+      x-swagger-router-controller: KeySSINotifications
+  /mq/create-channel/{anchorId}:
+    post:
+      tags:
+      - KeySSI Message Queue
+      summary: Creates a new Pub/Sub channel based on AnchorId
+      operationId: createChannel
+      parameters:
+      - name: anchorId
+        in: path
+        description: Identifier of the channel
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: ssi
+        in: header
+        description: PublicSSI controlling the channel
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Channel successfuly added
+          content: {}
+        "400":
+          description: Invalid AnchorId
+          content: {}
+      x-swagger-router-controller: KeySSIMessageQueue
+  /mq/send-message/{anchorId}:
+    post:
+      tags:
+      - KeySSI Message Queue
+      summary: Publish a new message into the Pub/Sub channel identified with AnchorId
+      operationId: sendMessage
+      parameters:
+      - name: anchorId
+        in: path
+        description: Identifier of the channel to which the message need to be delivered
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: authToken
+        in: header
+        description: empty, JWT, oauth, etc.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Body will contain a message in a custom format [size-of-header|header|messageSerialization]
+        content:
+          application/octet-stream: {}
+        required: true
+      responses:
+        "200":
+          description: Successfuly added message to channel AnchorId
+          content: {}
+        "404":
+          description: Channel not found.
+          content: {}
+      x-swagger-router-controller: KeySSIMessageQueue
+  /mq/receive-message/{anchorId}:
+    get:
+      tags:
+      - KeySSI Message Queue
+      summary: Request to receive a message from channel identified with AnchorId.
+        Long Pooling mechanism enabled.(if there is no message into channel the request
+        will be kept active until there is a new message or reach timeout value for
+        inactivity)
+      operationId: receiveMessage
+      parameters:
+      - name: anchorId
+        in: path
+        description: Identifier of the channel to which the message need to be delivered
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: authToken
+        in: header
+        description: empty, JWT, oauth, etc.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: controlProof
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Message available
+          content:
+            application/octet-stream: {}
+        "404":
+          description: Channel not found.
+          content: {}
+      x-swagger-router-controller: KeySSIMessageQueue
+  /anchor/add/{keySSI}:
+    put:
+      tags:
+      - Anchoring Service
+      summary: Publish a new version of the anchor
+      operationId: addAnchor
+      parameters:
+      - name: keySSI
+        in: path
+        description: keySSI base58
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+      responses:
+        "200":
+          description: Succesufuly added of a new version for AnchorId
+        "400":
+          description: Invalid AnchorId
+      x-swagger-router-controller: AnchoringService
+  /anchor/subscribe/{keySSI}:
+    get:
+      tags:
+      - Anchoring Service
+      summary: Creates a subscription in order to be notified after a new version
+        of an anchor is available
+      operationId: createAnchorSubscription
+      parameters:
+      - name: keySSI
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: fromVersion
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: authToken
+        in: header
+        required: false
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: subscriberID
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: timeout
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: waitForNonExisting
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns an subscriberID and if there are new versions starting
+            with  the {fromVersion} it returns them all
+        "400":
+          description: Invalid AnchorId
+      x-swagger-router-controller: AnchoringService
+  /anchor/unsubscribe/{keySSI}:
+    delete:
+      tags:
+      - Anchoring Service
+      summary: Deletes the subscription
+      operationId: deleteAnchorSubscription
+      parameters:
+      - name: keySSI
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: subscriberId
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns an subscriberID and if there are new versions starting
+            with  the {fromVersion} it returns them all
+        "400":
+          description: Invalid AnchorId
+      x-swagger-router-controller: AnchoringService
+  /anchor/versions/{keySSI}:
+    get:
+      tags:
+      - Anchoring Service
+      summary: Retrive all the versions of an anchor
+      operationId: getVersions
+      parameters:
+      - name: keySSI
+        in: path
+        description: keySSI base58
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: authToken
+        in: query
+        description: empty, JWT, oauth, etc.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns the list of the versions of a keySSI
+        "400":
+          description: Invalid AnchorId
+      x-swagger-router-controller: AnchoringService
+  /bricks/get-brick/{hashLink}:
+    get:
+      tags:
+      - Brick Storage
+      summary: Retrive the encrypted content of a brick
+      operationId: getBrick
+      parameters:
+      - name: hashLink
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: authToken
+        in: query
+        description: empty, JWT, oauth, etc.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns the encrypted content of a brick as a Buffer
+        "400":
+          description: Invalid hashLink
+      x-swagger-router-controller: BrickStorage
+  /bricks/put-brick:
+    put:
+      tags:
+      - Brick Storage
+      summary: stores the encrypted content of a brick
+      operationId: putBrick
+      parameters:
+      - name: tag
+        in: query
+        description: can be used to enforce better autorisation
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: authToken
+        in: query
+        description: empty, JWT, oauth, etc.
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      requestBody:
+        description: Body will contain the encrypted content of a brick
+        content:
+          application/octet-stream: {}
+        required: true
+      responses:
+        "200":
+          description: Returns the hash of the content
+        "400":
+          description: Invalid hashLink
+      x-swagger-router-controller: BrickStorage
+  /api-hub/getAuthToken:
+    get:
+      tags:
+      - APIHub Authentication
+      summary: Generates an AuthToken
+      operationId: generateAuthToken
+      parameters:
+      - name: expiration
+        in: query
+        description: number of seconds of validity
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: number
+      - name: ssi
+        in: query
+        description: PubliSSI of the requesting identity
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: signature
+        in: query
+        description: Signature of the requesting identity
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Returns an AuthToken
+      x-swagger-router-controller: APIHubAuthentication
+  /api-hub/setQuota:
+    post:
+      tags:
+      - APIHub Authentication
+      summary: Sets quota for an identity addressed with PublicSSI
+      operationId: setQuota
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_1'
+      responses:
+        "200":
+          description: Quota set
+      x-swagger-router-controller: APIHubAuthentication
+  /api-hub/setTagPolicy:
+    post:
+      tags:
+      - APIHub Authentication
+      summary: Update of tag policy
+      operationId: setTagPolicy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_2'
+      responses:
+        "200":
+          description: Quota set
+      x-swagger-router-controller: APIHubAuthentication
+  /api-hub/addUserInTag:
+    post:
+      tags:
+      - APIHub Authentication
+      summary: Adds user in a tag
+      operationId: addUserInTag
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_3'
+      responses:
+        "200":
+          description: User added into tag
+      x-swagger-router-controller: APIHubAuthentication
+  /api-hub/addAdmin:
+    put:
+      tags:
+      - APIHub Authentication
+      summary: Adds an admin
+      operationId: addAdmin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body_4'
+      responses:
+        "200":
+          description: Add user in admins
+      x-swagger-router-controller: APIHubAuthentication
+  /api-hub/removeAdmin:
+    delete:
+      tags:
+      - APIHub Authentication
+      summary: Remove admin
+      operationId: removeAdmin
+      parameters:
+      - name: ssi
+        in: header
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: signature
+        in: header
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Removes user from admins
+      x-swagger-router-controller: APIHubAuthentication
+  /bricks-ledger/wsms/command:
+    put:
+      tags:
+      - Bricks Ledger
+      summary: Creates a new command for WSMS
+      operationId: addCommand
+      parameters:
+      - name: type
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      requestBody:
+        description: command JSON
+        content:
+          application/json: {}
+      responses:
+        "200":
+          description: Command added
+      x-swagger-router-controller: BricksLedger
+  /bricks-ledger/bfs/storeCommand:
+    put:
+      tags:
+      - Bricks Ledger
+      summary: Creates a new command for WSMS
+      operationId: storeCommand
+      requestBody:
+        description: command JSON
+        content:
+          application/json: {}
+      responses:
+        "200":
+          description: Command added
+      x-swagger-router-controller: BricksLedger
+  /bricks-ledger/pas/anchor/{hashLink}:
+    put:
+      tags:
+      - Bricks Ledger
+      summary: Creates a new command for WSMS
+      operationId: doAnchor
+      parameters:
+      - name: hashLink
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: All went well.
+      x-swagger-router-controller: BricksLedger
+components:
+  schemas:
+    body:
+      type: object
+      properties:
+        hash:
+          $ref: '#/components/schemas/body_hash'
+        authToken:
+          type: string
+          description: empty, JWT, oauth, etc.
+        digitalProof:
+          type: string
+        ZKPValue:
+          type: string
+    body_1:
+      type: object
+      properties:
+        spaceAmount:
+          type: number
+        ssi:
+          type: string
+        signature:
+          type: string
+      example:
+        spaceAmount: 65535
+        ssi: ssi:type:dldomain:specificstring:control:vn:hint
+        signature: Signature of an Admin
+    body_2:
+      type: object
+      properties:
+        tag:
+          type: string
+        requireAuthToken:
+          type: boolean
+        signature:
+          type: string
+      example:
+        tag: name of the tag
+        requireAuthToken: true
+        signature: Signature of an Admin
+    body_3:
+      type: object
+      properties:
+        tag:
+          type: string
+        ssi:
+          type: string
+        signature:
+          type: string
+      example:
+        tag: name of the tag
+        ssi: ssi:type:dldomain:specificstring:control:vn:hint
+        signature: Signature of an Admin
+    body_4:
+      type: object
+      properties:
+        ssi:
+          type: string
+        signature:
+          type: string
+      example:
+        ssi: ssi:type:dldomain:specificstring:control:vn:hint
+        signature: Signature of an existing Admin
+    body_hash:
+      type: object
+      properties:
+        new:
+          type: string
+        last:
+          type: string

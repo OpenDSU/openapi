@@ -1,0 +1,141 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+  - name: APIHub APIs - Anchoring
+    description: Service that facilitate the anchoring process
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+
+  /anchor/{domain}/create-anchor/{keySSI}:
+    put:
+      tags:
+        - APIHub APIs - Anchoring
+      summary: Publish creation of a new anchor
+      operationId: create-anchor
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain should be the same with the domain from the AnchorId
+          schema:
+            type: string
+        - name: keySSI
+          in: path
+          description: keySSI base58
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+      responses:
+        "201":
+          description: Succesufuly created a new anchor for AnchorId
+        "409":
+          description: Access Error
+        "403":
+          description: Access to resource is forbidden
+        "500":
+          description: Fallback generic error response
+      x-swagger-router-controller: AnchoringService
+  /anchor/{domain}/append-to-anchor/{keySSI}:
+    put:
+      tags:
+        - APIHub APIs - Anchoring
+      summary: Append a new hashlink to an AnchorId
+      operationId: append-anchor
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain should be the same with the domain from the AnchorId
+          schema:
+            type: string
+        - name: keySSI
+          in: path
+          description: keySSI base58
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+      responses:
+        "201":
+          description: Succesufuly appended the hashlink for AnchorId
+        "409":
+          description: Access Error
+        "403":
+          description: Access to resource is forbidden
+        "428":
+          description: Hashlink for AnchorId are out of sync
+        "500":
+          description: Fallback generic error response
+      x-swagger-router-controller: AnchoringService
+  /anchor/{domain}/get-all-versions/{keySSI}:
+    get:
+      tags:
+        - APIHub APIs - Anchoring
+      summary: Get all the versions of an anchor
+      operationId: getAllVersions
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain should be the same with the domain from the AnchorId
+          schema:
+            type: string
+        - name: keySSI
+          in: path
+          description: keySSI base58
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns the list of the versions of a keySSI
+        "404":
+          description: Invalid AnchorId
+      x-swagger-router-controller: AnchoringService
+
+components:
+  schemas:
+    body:
+      type: object
+      properties:
+        hashLinkIds:
+          $ref: '#/components/schemas/hashLinkIds'
+        digitalProof:
+          type: string
+        zkp:
+          type: string
+    hashLinkIds:
+      type: object
+      properties:
+        new:
+          type: string
+        last:
+          type: string

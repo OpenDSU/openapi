@@ -1,0 +1,65 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+
+  - name: APIHub APIs - BDNS
+    description: Access the loaded BDNS configuration
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+
+  /bdns:
+    get:
+      tags:
+        - APIHub APIs - BDNS
+      summary : Get the loaded BDNS configuration
+      operationId: bdns
+      responses:
+        "200" :
+          description:  Returns the loaded BDNS configuration
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: |
+                  default:
+                    replicas: []
+                    brickStorages:
+                      - $ORIGIN
+                    anchoringServices:
+                      - $ORIGIN
+                  epi:
+                    replicas: []
+                    brickStorages:
+                      - $ORIGIN
+                    anchoringServices:
+                      - $ORIGIN
+                  vault:
+                    replicas: []
+                    brickStorages:
+                      - $ORIGIN
+                    anchoringServices:
+                      - $ORIGIN
+        "404" :
+          description: BDNS configuration not loaded yet
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: BDNS hosts not found
+    x-swagger-router-controller: BdnsService
+
+
+

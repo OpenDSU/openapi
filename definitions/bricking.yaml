@@ -1,0 +1,106 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+
+  - name: APIHub APIs - Bricking
+    description: Storage Service for all the bricks generated from DSUs
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+
+
+  /bricking/{domain}/put-brick:
+    put:
+      tags:
+        - APIHub APIs - Bricking
+      summary: stores the encrypted content of a brick
+      operationId: putBrick
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain used for the bricks
+          schema:
+            type: string
+      requestBody:
+        description: Body will contain the encrypted content of a brick
+        content:
+          application/octet-stream: {}
+        required: true
+      responses:
+        "201":
+          description: Returns the hash of the content
+        "409":
+          description: Invalid hashLink
+        "500":
+          description: Fallback generic error response
+      x-swagger-router-controller: BrickStorage
+  /bricking/{domain}/get-brick/{hashLink}:
+    get:
+      tags:
+        - APIHub APIs - Bricking
+      summary: Retrive the encrypted content of a brick
+      operationId: getBrick
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain used for the bricks
+          schema:
+            type: string
+        - name: hashLink
+          in: path
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns the encrypted content of a brick as a Buffer
+        "404":
+          description: Brick not found
+        "500":
+          description: Brick domain not found
+      x-swagger-router-controller: BrickStorage
+  /bricking/{domain}/downloadMultipleBricks:
+    get:
+      tags:
+        - APIHub APIs - Bricking
+      summary: Get the encrypted content for multiple bricks
+      operationId: downloadMultipleBricks
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain used for the bricks
+          schema:
+            type: string
+        - name: hashes
+          description: array, comma delimited hashlinks
+          in: query
+          required: true
+          style: form
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns the encrypted content of a brick as a Buffer {length}{brickContent}
+        "404":
+          description: Brick not found
+        "500":
+          description: Brick domain not found
+      x-swagger-router-controller: BrickStorage

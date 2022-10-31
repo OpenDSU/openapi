@@ -1,0 +1,112 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+
+  - name: APIHub APIs - Logging
+    description: Handles read/write log message operations
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+  /log/add/{anchorId}/{loglevel}:
+    post:
+      tags:
+        - APIHub APIs - Logging
+      summary: Stores the provided log message or file content
+      operationId: addLog
+      parameters:
+        - name: anchorId
+          in: path
+          description: AnchorId, base58 encoded zero access keySSI
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: PPnBCCJoTpzrUJ1fHix85HQhWca6h39xVdm4hdQA2o1oFbaRm6TnQSY3KoQgViypburV39xnvWRKQ95j1fVu4Z1WRt4wzwFx5
+        - name: loglevel
+          in: path
+          description: The type of log level associated with the provided log
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: error/warning/info/debug
+
+      requestBody:
+        description: Body will contain the log message
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/message'
+                - $ref: '#/components/schemas/bodyMessage'
+        required: true
+      responses:
+        "200" :
+          description : Log information was saved
+        "400" :
+          description: Log message could not be found or is not of type string
+        "500" :
+          description: File I/O error
+      x-swagger-router-controller: Logging
+
+  /log/get/{anchorID}:
+    get:
+      tags:
+        - APIHub APIs - Logging
+      operationId: readLog
+      summary: Get the logs stored for the provided anchorId
+      parameters:
+        - name: anchorID
+          in: path
+          description: AnchorId, base58 encoded zero access keySSI
+          required: true
+          style: simple
+          schema:
+            type: string
+            example: PPnBCCJoTpzrUJ1fHix85HQhWca6h39xVdm4hdQA2o1oFbaRm6TnQSY3KoQgViypburV39xnvWRKQ95j1fVu4Z1WRt4wzwFx5
+      responses:
+        "200" :
+          description : Return the saved logs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/logMessage'
+      x-swagger-router-controller: Logging
+
+
+
+components:
+  schemas:
+    logMessage:
+      type: array
+      items:
+        type: object
+        properties:
+          date:
+            type: string
+          level:
+            type: string
+          anchorID:
+            type: string
+          message:
+            type: string
+    bodyMessage:
+      type: string
+    message:
+      type: object
+      properties:
+        message:
+          type: string
+
