@@ -1,41 +1,35 @@
-<!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Swagger UI</title>
-    <link rel="stylesheet" type="text/css" href="./swagger-ui.css" />
-    <link rel="stylesheet" type="text/css" href="index.css" />
-    <link rel="stylesheet" type="text/css" href="./bootstrap/dist/css/bootstrap.css" />
-    <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32" />
-    <link rel="icon" type="image/png" href="./favicon-16x16.png" sizes="16x16" />
+    <title>OpenDSU OpenApi</title>
+    <link rel="stylesheet" type="text/css" href="/swagger-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+    <link rel="stylesheet" type="text/css" href="/bootstrap/dist/css/bootstrap.css"/>
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32"/>
+    <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16"/>
 </head>
 
 <body>
 
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <button class="nav-link active" onclick="changeDefinition('anchoring')">Anchoring</button>
-    </li>
-    <li class="nav-item">
-        <button class="nav-link" onclick="changeDefinition('bdns')">BDNS</button>
-    </li>
-    <li class="nav-item">
-        <button class="nav-link" onclick="changeDefinition('bricking')">Bricking</button>
-    </li>
-    <li class="nav-item">
-        <button class="nav-link" onclick="changeDefinition('logging')">Logging</button>
-    </li>
+<ul class="nav nav-pills m-2" id="openapi-nav-tabs">
 </ul>
 
 
 <div id="swagger-ui"></div>
-<script src="./swagger-ui-bundle.js" charset="UTF-8"> </script>
-<script src="./swagger-ui-standalone-preset.js" charset="UTF-8"> </script>
-<script src="./swagger-initializer.js" charset="UTF-8"> </script>
+<script src="/swagger-ui-bundle.js" charset="UTF-8"></script>
+<script src="/swagger-ui-standalone-preset.js" charset="UTF-8"></script>
 
-<script>
-    window.onload = changeDefinition('anchoring').bind();
+<script type="module">
+    const parentSelector = "#openapi-nav-tabs"
+    import {changeDefinition,initialize} from '/openapi-initializer.js';
+    initialize(parentSelector);
+    window.changeDefinition = changeDefinition;
+    const openapiDocument = window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1)
+    window.onload = () => {
+        changeDefinition(openapiDocument);
+        document.querySelector(`${parentSelector} li[document-data='${openapiDocument}'] button`).classList.add('active');
+    }
 </script>
 </body>
 </html>

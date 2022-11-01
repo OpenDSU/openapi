@@ -1,0 +1,18 @@
+{
+  "anchoring": {
+    "path": "/definitions/anchoring.yaml",
+    "label": "Anchoring"
+  },
+  "bdns": {
+    "path":"/definitions/bdns.yaml",
+    "label": "BDNS"
+  },
+  "bricking": {
+    "path": "/definitions/bricking.yaml",
+    "label": "Bricking"
+  },
+  "logging": {
+    "path": "/definitions/logging.yaml",
+    "label": "Logging"
+  }
+}
