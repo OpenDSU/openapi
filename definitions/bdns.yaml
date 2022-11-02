@@ -30,28 +30,48 @@ paths:
         "200" :
           description:  Returns the loaded BDNS configuration
           content:
-            text/plain:
+            json/object:
               schema:
-                type: string
+                type: object
                 example: |
-                  default:
-                    replicas: []
-                    brickStorages:
-                      - $ORIGIN
-                    anchoringServices:
-                      - $ORIGIN
-                  epi:
-                    replicas: []
-                    brickStorages:
-                      - $ORIGIN
-                    anchoringServices:
-                      - $ORIGIN
-                  vault:
-                    replicas: []
-                    brickStorages:
-                      - $ORIGIN
-                    anchoringServices:
-                      - $ORIGIN
+                  {
+                     "default":{
+                        "replicas":[
+                  
+                        ],
+                        "brickStorages":[
+                           "$ORIGIN"
+                        ],
+                        "anchoringServices":[
+                           "$ORIGIN"
+                        ]
+                     },
+                     "vault":{
+                        "replicas":[
+                  
+                        ],
+                        "brickStorages":[
+                           "$ORIGIN"
+                        ],
+                        "anchoringServices":[
+                           "$ORIGIN"
+                        ]
+                     },
+                     "company.domain":{
+                        "replicas":[
+                  
+                        ],
+                        "brickStorages":[
+                           "$ORIGIN"
+                        ],
+                        "anchoringServices":[
+                           "$ORIGIN"
+                        ],
+                        "mqEndpoints":[
+                           "$ORIGIN"
+                        ]
+                     }
+                  }
         "404" :
           description: BDNS configuration not loaded yet
           content:
@@ -59,6 +79,14 @@ paths:
               schema:
                 type: string
                 example: BDNS hosts not found
+        "500" :
+          description: Generic failure when trying to read or parse bdns.host file
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Failed to initialize BDNS
+
     x-swagger-router-controller: BdnsService
 
 

@@ -52,6 +52,8 @@ paths:
           description: Access Error
         "403":
           description: Access to resource is forbidden
+        "429":
+          description: Too Many Requests
         "500":
           description: Fallback generic error response
       x-swagger-router-controller: AnchoringService
@@ -90,6 +92,42 @@ paths:
           description: Access to resource is forbidden
         "428":
           description: Hashlink for AnchorId are out of sync
+        "429":
+          description: Too Many Requests
+        "500":
+          description: Fallback generic error response
+      x-swagger-router-controller: AnchoringService
+  /anchor/{domain}/create-or-update-multiple-anchors:
+    put:
+      tags:
+        - APIHub APIs - Anchoring
+      summary: Create or update multiple anchors in the same request
+      operationId: createOrUpdateMultipleAnchors
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: All the created or updated anchors should be from the same domain
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/body'
+      responses:
+        "201":
+          description: Succesufuly created or updated the provided anchors
+        "403":
+          description: Access to resource is forbidden
+        "409":
+          description: Access Error
+        "428":
+          description: At least one Hashlink for one AnchorId is out of sync
+        "429":
+          description: Too Many Requests
         "500":
           description: Fallback generic error response
       x-swagger-router-controller: AnchoringService
@@ -119,6 +157,8 @@ paths:
           description: Returns the list of the versions of a keySSI
         "404":
           description: Invalid AnchorId
+        "429":
+          description: Too Many Requests
       x-swagger-router-controller: AnchoringService
 
 components:
