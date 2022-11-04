@@ -1,0 +1,59 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+
+  - name: APIHub APIs - Static Server
+    description: Deliver static file contents from the current location
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+  /directory-summary/{walletName}/{directoryPath}:
+    get:
+      tags:
+        - APIHub APIs - Static Server
+      operationId: getStaticDirectoryContents
+      summary: Return the file contents and directory structure from the directoryPath in json format
+      parameters:
+        - name: walletName
+          in: path
+          description: the name of the wallet for each you want to get details
+          example: sponsor-wallet
+          required: true
+          schema:
+            type: string
+        - name: directoryPath
+          in: path
+          description: directory resource
+          example: wallet-patch
+          required: true
+          schema:
+            type: string
+      responses:
+        "404":
+          description: Directory not found
+        "403":
+          description: Invalid directory
+        "200" :
+          description: Return the directory structure and file contents
+          content:
+            application/json:
+              schema:
+                type: object
+                example: |
+                  {
+                      "/": {
+                          "seed": "5kieNHd9wqBPNZCqdLnyRV4JPbmT9QjVPcPWuYXnuLrWfFkGdeqyNYbqSkx4wX23gp269R1vDHTF9aMpXzbXprnoJNKsjwS9VVJtzqo4YFArHwN11i1Ev64Evk3ztU1FWvim5r6fw9rcb4PS1FznoCnMigShSo5siJm8jZfm94bncJRFv8az8WcxKLhjLHahoPSUg6iCYvDp8QS3"
+                      }
+                  }

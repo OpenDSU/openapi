@@ -1,0 +1,46 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+
+  - name: APIHub APIs - Installation Info
+    description: Provides information about current workspace and OpenDSU-SDK installation
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+
+  /installation-details/:
+    get:
+      tags:
+        - APIHub APIs - Installation Info
+      summary: Provides information about current workspace and OpenDSU-SDK installation
+      responses:
+        "200":
+          description: Returns informations about current workspace and OpenDSU-SDK commit number
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref : '#/components/schemas/CommitInfo'
+
+components:
+  schemas:
+    CommitInfo:
+      type: object
+      properties:
+        commitNo:
+          type: string
+        commitMessage:
+          type: string

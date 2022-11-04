@@ -1,4 +1,8 @@
 {
+  "installation": {
+    "path": "/definitions/installation.yaml",
+    "label": "Installation Details"
+  },
   "anchoring": {
     "path": "/definitions/anchoring.yaml",
     "label": "Anchoring"
@@ -10,6 +14,14 @@
   "bricking": {
     "path": "/definitions/bricking.yaml",
     "label": "Bricking"
+  },
+  "cloud-wallet": {
+    "path": "/definitions/cloud-wallet.yaml",
+    "label": "Cloud Wallet"
+  },
+  "static-server": {
+    "path": "/definitions/static-server.yaml",
+    "label": "Static Server"
   },
   "logging": {
     "path": "/definitions/logging.yaml",

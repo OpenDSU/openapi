@@ -1,0 +1,145 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+
+  - name: APIHub APIs - Cloud Wallet
+    description: Provides operations using DSU workers by simulating Service Workers
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+  /{appName}/loader/cloud-wallet/{keySSI}/:
+    get:
+      tags:
+        - APIHub APIs - Cloud Wallet
+      summary: Serving the index.html content of the application
+      operationId: getIndexHtmlResource
+      parameters:
+        - name: appName
+          in: path
+          description: appName
+          example: sponsor-wallet
+          required: true
+          schema:
+            type: string
+        - name: keySSI
+          in: path
+          description: keySSI in base58 encoding
+          example: 29fgyfTQXJmJNni42zuJu3NXHgtUuXk3318NMMTrYKfj1gwAttt16rKq3vPCUjFV3KZeF9HJnaZnW4FnN7t7zBQFKjdXBwX
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Operation handled with success. Returns the content of the file
+        "400":
+          description: Worker resolver error
+        "500":
+          description: Invalid KeySSI
+  /cloud-wallet/{keySSI}/{filePath}:
+    get:
+      tags:
+        - APIHub APIs - Cloud Wallet
+      summary: Serves the requested content, identified by the appended path, using DSU workers
+      operationId: getResource
+      parameters:
+        - name: keySSI
+          in: path
+          description: keySSI in base58 encoding
+          example: 29fgyfTQXJmJNni42zuJu3NXHgtUuXk3318NMMTrYKfj1gwAttt16rKq3vPCUjFV3KZeF9HJnaZnW4FnN7t7zBQFKjdXBwX
+          required: true
+          schema:
+            type: string
+        - name: filePath
+          in: path
+          description: file resource
+          example: webcardinal.json
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Operation handled with success. Returns the content of the file
+        "500":
+          description: Invalid KeySSI
+        "400":
+          description: Worker resolver error
+
+
+  /iframe/{keySSI}/{filePath}:
+    get:
+      tags:
+        - APIHub APIs - Cloud Wallet
+      summary: Serves the requested content, identified by the appended path, using DSU workers. It is used only for keeping backwards compatibility with old wallets that are still using SWs.
+      operationId: getCodeResource
+      deprecated: true
+      parameters:
+        - name: keySSI
+          in: path
+          description: keySSI in base58 encoding
+          example: 29fgyfTQXJmJNni42zuJu3NXHgtUuXk3318NMMTrYKfj1gwAttt16rKq3vPCUjFV3KZeF9HJnaZnW4FnN7t7zBQFKjdXBwX
+          required: true
+          schema:
+            type: string
+        - name: filePath
+          in: path
+          description: file resource
+          example: webcardinal.json
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Operation handled with success. Returns the content of the file
+        "500":
+          description: Invalid KeySSI
+        "400":
+          description: Worker resolver error
+  /{walletName}/loader/iframe/{keySSI}/{filePath}:
+    get:
+      tags:
+        - APIHub APIs - Cloud Wallet
+      summary: Serves the requested content, identified by the appended path, using DSU workers. It is used only for keeping backwards compatibility with old wallets that are still using SWs.
+      operationId: getIframeCodeResource
+      deprecated: true
+      parameters:
+        - name: walletName
+          in: path
+          description: wallet name
+          example: sponsor-wallet
+          required: true
+          schema:
+            type: string
+        - name: keySSI
+          in: path
+          description: keySSI in base58 encoding
+          example: 29fgyfTQXJmJNni42zuJu3NXHgtUuXk3318NMMTrYKfj1gwAttt16rKq3vPCUjFV3KZeF9HJnaZnW4FnN7t7zBQFKjdXBwX
+          required: true
+          schema:
+            type: string
+        - name: filePath
+          in: path
+          description: file resource
+          example: webcardinal.json
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Operation handled with success. Returns the content of the file
+        "500":
+          description: Invalid KeySSI
+        "400":
+          description: Worker resolver error
+
