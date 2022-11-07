@@ -57,3 +57,56 @@ paths:
                           "seed": "5kieNHd9wqBPNZCqdLnyRV4JPbmT9QjVPcPWuYXnuLrWfFkGdeqyNYbqSkx4wX23gp269R1vDHTF9aMpXzbXprnoJNKsjwS9VVJtzqo4YFArHwN11i1Ev64Evk3ztU1FWvim5r6fw9rcb4PS1FznoCnMigShSo5siJm8jZfm94bncJRFv8az8WcxKLhjLHahoPSUg6iCYvDp8QS3"
                       }
                   }
+  /files/upload/{folder}:
+    post:
+      tags:
+        - APIHub APIs - Upload
+      summary: Upload the contents of a file into the specified folder
+      operationId: uploadFile
+      parameters:
+        - name: folder
+          in: path
+          description: The folder under which the file contents will be uploaded
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Body will contain the content of the file
+        content:
+          application/octet-stream: {}
+      responses:
+        "500":
+          description: Invalid folder or I/O operation
+        "200":
+          description: Returns the path under which the file contents were saved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  path:
+                    type: string
+
+  /files/download/{filepath}:
+    get:
+      tags:
+        - APIHub APIs - Upload
+      summary: Download the contents of the file identified by the filepath
+      operationId: downloadFile
+      parameters:
+        - name: filepath
+          in: path
+          description: The path of the file to download
+          required: true
+          schema:
+            type: string
+      responses:
+        "404":
+          description: I/O operation error or invalid file path
+        "200":
+          description: Return the content of the file
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary

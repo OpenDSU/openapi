@@ -26,5 +26,9 @@
   "logging": {
     "path": "/definitions/logging.yaml",
     "label": "Logging"
+  },
+  "notifications": {
+    "path": "/definitions/notifications.yaml",
+    "label": "Notifications"
   }
 }

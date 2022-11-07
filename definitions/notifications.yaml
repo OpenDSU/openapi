@@ -1,0 +1,107 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+
+  - name: APIHub APIs - Notifications
+    description: Notification service. Send or receive messages using queue for anchorId
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+
+  /notifications/subscribe/{anchorId}:
+    post:
+      tags:
+        - APIHub APIs - Notifications
+      summary: Request to get notified each time a new message is received for the anchorId. This endpoint enables Long Pooling request sequences.
+      operationId: createSubscription
+      parameters:
+        - name: anchorId
+          in: path
+          description:  zero access keySSI encoded in base58
+          example: 29fgyfTQXJmJNni42zuJu3NXHgtUuXk3318NMMTrYKfj1gwAttt16rKq3vPCUjFV3KZeF9HJnaZnW4FnN7t7zBQFKjdXBwX
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: returns a list of messages received by the speciefied anchorId
+        "400":
+          description: Connection timeout
+        "409":
+          description: Queue already exists
+        "500":
+          description: An internal error occured whenn creating the queue
+
+  /notifications/unsubscribe/{anchorId}:
+    delete:
+      tags:
+        - APIHub APIs - Notifications
+      summary: Delete subscription from AnchorId notifications
+      operationId: deleteSubscription
+      parameters:
+        - name: anchorId
+          in: path
+          description:  zero access keySSI encoded in base58
+          example: 29fgyfTQXJmJNni42zuJu3NXHgtUuXk3318NMMTrYKfj1gwAttt16rKq3vPCUjFV3KZeF9HJnaZnW4FnN7t7zBQFKjdXBwX
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "503":
+          description: Under construction. Currentlly not implemented
+
+  /notifications/publish/{anchorId}:
+    put:
+      tags:
+        - APIHub APIs - Notifications
+      summary: Publish a message to the anchorId subscriber. It will try to create a queue for the anchorId in case it doesnt exist.
+      operationId: publishNotification
+      parameters:
+        - name: anchorId
+          in: path
+          description: zero access keySSI encoded in base58
+          example: 29fgyfTQXJmJNni42zuJu3NXHgtUuXk3318NMMTrYKfj1gwAttt16rKq3vPCUjFV3KZeF9HJnaZnW4FnN7t7zBQFKjdXBwX
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        description: Body will contain the message to be send to the anchorId
+        content:
+          application/json:
+            schema:
+              type: string
+      responses:
+        "200":
+          description: Message was placed in the queue for the anchorId
+          content:
+            application/json:
+              schema:
+                type: object
+                example: |
+                  {"message":"Message delivered to 1 subscribers."}
+
+        "400":
+          description: Message could not be read from the body
+        "409":
+          description: Queue already exists
+        "500"  :
+          description: Error creating notification queue for the provided anchorId or unable to send the message
+
