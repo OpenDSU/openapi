@@ -46,7 +46,7 @@ paths:
           description: Invalid hashLink
         "500":
           description: Fallback generic error response
-      x-swagger-router-controller: BrickStorage
+
   /bricking/{domain}/get-brick/{hashLink}:
     get:
       tags:
@@ -74,7 +74,7 @@ paths:
           description: Brick not found
         "500":
           description: Brick domain not found
-      x-swagger-router-controller: BrickStorage
+
   /bricking/{domain}/downloadMultipleBricks:
     get:
       tags:
@@ -103,4 +103,3 @@ paths:
           description: Brick not found
         "500":
           description: Brick domain not found
-      x-swagger-router-controller: BrickStorage

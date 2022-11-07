@@ -1,0 +1,294 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+
+  - name: APIHub APIs - DSU Wizard
+    description: Multi steps transaction manager allowing DSU manipulation
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+
+  /dsu-wizard/{domain}/begin:
+    post:
+      tags:
+        -  APIHub APIs - DSU Wizard
+      summary:  Instantiate a transaction handled by the transaction manager
+      operationId: begin-transaction
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain on which the transaction is instantiated
+          schema:
+            type: string
+            example: default
+      responses:
+        "200":
+          description: Return the transactionId of the instantiated transaction
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 340e887f5946a33e436a86511e573d20
+        "404":
+          description: DSU Wizard component is not enabled
+        "500":
+          description: Instantiating the transaction encountered an error
+
+
+
+
+  /dsu-wizard/{domain}/build/{transactionId}:
+    post:
+      security:
+        - authorization: []
+      tags:
+        -  APIHub APIs - DSU Wizard
+      summary: Finish the transaction
+      operationId: close-transaction
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: |
+            The domain on which the transaction is executed
+            <br/> ????? It is not used
+          schema:
+            type: string
+            example: default
+        - name: transactionId
+          in: path
+          required: true
+          description: The transaction Id which is executed
+          schema:
+            type: string
+            example: 340e887f5946a33e436a86511e573d20
+      responses:
+        "200":
+          description: Return the transaction result, the keySSI in base58 of the updated/created DSU
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: PPnBCCJoTpzrUJ1fHix85HQhWca6h39xVdm4hdQA2o1oFbaRm6TnQSY3KoQgViypburV39xnvWRKQ95j1fVu4Z1WRt4wzwFx5
+        "404":
+          description: DSU Wizard component is not enabled
+        "500":
+          description: Error executing the transaction. Returns the encountered error
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Unable to ...
+
+
+  /dsu-wizard/{domain}/addFile/{transactionId}:
+    post:
+      tags:
+        -  APIHub APIs - DSU Wizard
+      operationId: addFile
+      summary: Add the addFile command in the context of the transactionId
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: |
+            The domain on which the addFile command should be executed
+            <br/> ????? It is not used
+          schema:
+            type: string
+            example: default
+        - name: transactionId
+          in: path
+          required: true
+          description: The transaction Id context in which the command should be executed
+          schema:
+            type: string
+            example: 340e887f5946a33e436a86511e573d20
+        - name: x-dossier-path
+          description: The file path under which the file will be uploaded in the DSU
+          in: header
+          required: true
+          schema:
+            type: string
+            example: /dir1/file.json
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: The command was added to the transanction successfully
+        "404":
+          description: DSU Wizard component is not enabled
+        "500":
+          description: Error adding the command to the transaction
+
+
+  /dsu-wizard/{domain}/copy/{transactionId}:
+    post:
+      tags:
+        -  APIHub APIs - DSU Wizard
+      operationId: copyFolder
+      summary: |
+        Add the copy command in the context of the transactionId.
+        It will copy the contents from one folder to another
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: |
+            The domain on which the *__copy__* command should be executed
+            <br/> ????? It is not used
+          schema:
+            type: string
+            example: default
+        - name: transactionId
+          in: path
+          required: true
+          description: The transaction Id context in which the command should be executed
+          schema:
+            type: string
+            example: 340e887f5946a33e436a86511e573d20
+        - name: x-src-path
+          description: The source path, in the context of the DSU, for the copy command
+          in: header
+          required: true
+          schema:
+            type: string
+            example: /src
+        - name: x-dest-path
+          description: The destination path, in the context of the DSU, where the contents from the source will be copied
+          in: header
+          required: true
+          schema:
+            type: string
+            example: /dest
+
+      responses:
+        "200":
+          description: The command was added to the transanction successfully
+        "404":
+          description: DSU Wizard component is not enabled
+        "500":
+          description: Error adding the command to the transaction
+
+
+  /dsu-wizard/{domain}/mount/{transactionId}:
+    post:
+      tags:
+        -  APIHub APIs - DSU Wizard
+      operationId: mountDSU
+      summary: |
+        Add the mount command in the context of the transactionId.
+        It will mount the DSU in a specific path using the provided keySSI
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: |
+            The domain on which the *__mount__* command should be executed
+            <br/>???? The command doesn't seem to consider the domain
+          schema:
+            type: string
+            example: default
+        - name: transactionId
+          in: path
+          required: true
+          description: The transaction Id context in which the command should be executed
+          schema:
+            type: string
+            example: 340e887f5946a33e436a86511e573d20
+        - name: x-mount-path
+          description: The path where the DSU will be mounted
+          in: header
+          required: true
+          schema:
+            type: string
+            example: /orders
+        - name: x-mounted-dossier-seed
+          description: The keySSI base58, used to mount the DSU
+          in: header
+          required: true
+          schema:
+            type: string
+            example: PPnBCCJoTpzrUJ1fHix85HQhWca6h39xVdm4hdQA2o1oFbaRm6TnQSY3KoQgViypburV39xnvWRKQ95j1fVu4Z1WRt4wzwFx5
+
+      responses:
+        "200":
+          description: The command was added to the transanction successfully
+        "404":
+          description: DSU Wizard component is not enabled
+        "500":
+          description: Error adding the command to the transaction
+
+
+  /dsu-wizard/{domain}/setKeySSI/{transactionId}:
+    post:
+      tags:
+        -  APIHub APIs - DSU Wizard
+      operationId: setKeySSI
+      summary: |
+        Add the setKeySSI command in the context of the transactionId.
+        It will update the transaction context with the provided keySSI
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: |
+            The domain on which the *__setKeySSI__* command should be executed
+            <br/>???? The command doesn't seem to consider the domain
+          schema:
+            type: string
+            example: default
+        - name: transactionId
+          in: path
+          required: true
+          description: The transaction Id context in which the command should be executed
+          schema:
+            type: string
+            example: 7da4...
+        - name: x-force-dsu-create
+          description: The path where the DSU will be mounted
+          in: header
+          required: true
+          schema:
+            type: boolean
+            example: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+              description: keySSI base58 encoding
+              example: PPnBCCJoTpzrUJ1fHix85HQhWca6h39xVdm4hdQA2o1oFbaRm6TnQSY3KoQgViypburV39xnvWRKQ95j1fVu4Z1WRt4wzwFx5
+      responses:
+        "200":
+          description: The command was added to the transanction successfully
+        "404":
+          description: DSU Wizard component is not enabled
+        "500":
+          description: Error adding the command to the transaction
+
+components:
+  securitySchemes:
+    authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+

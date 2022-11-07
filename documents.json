@@ -19,6 +19,10 @@
     "path": "/definitions/cloud-wallet.yaml",
     "label": "Cloud Wallet"
   },
+  "dsu-wizard": {
+    "path": "/definitions/dsu-wizard.yaml",
+    "label": "DSU Wizard"
+  },
   "static-server": {
     "path": "/definitions/static-server.yaml",
     "label": "Static Server"

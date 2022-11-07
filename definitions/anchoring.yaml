@@ -56,7 +56,6 @@ paths:
           description: Too Many Requests
         "500":
           description: Fallback generic error response
-      x-swagger-router-controller: AnchoringService
   /anchor/{domain}/append-to-anchor/{keySSI}:
     put:
       tags:
@@ -96,7 +95,6 @@ paths:
           description: Too Many Requests
         "500":
           description: Fallback generic error response
-      x-swagger-router-controller: AnchoringService
   /anchor/{domain}/create-or-update-multiple-anchors:
     put:
       tags:
@@ -130,7 +128,6 @@ paths:
           description: Too Many Requests
         "500":
           description: Fallback generic error response
-      x-swagger-router-controller: AnchoringService
   /anchor/{domain}/get-all-versions/{keySSI}:
     get:
       tags:
@@ -159,8 +156,6 @@ paths:
           description: Invalid AnchorId
         "429":
           description: Too Many Requests
-      x-swagger-router-controller: AnchoringService
-
 components:
   schemas:
     body:

@@ -88,7 +88,7 @@ paths:
           description: returns a list of versions of the AnchorId
         "400":
           description: Wrong request format
-      x-swagger-router-controller: KeySSINotifications
+
   /notifications/unsubscribe/{anchorId}:
     delete:
       tags:
@@ -125,7 +125,6 @@ paths:
           description: returns a list of versions of the AnchorId
         "400":
           description: Wrong request format
-      x-swagger-router-controller: KeySSINotifications
   /notifications/publish/{anchorId}:
     put:
       tags:
@@ -164,7 +163,6 @@ paths:
           description: Notification received
         "404":
           description: Subscribers list not found
-      x-swagger-router-controller: KeySSINotifications
   /mq/create-channel/{anchorId}:
     post:
       tags:
@@ -195,7 +193,6 @@ paths:
         "400":
           description: Invalid AnchorId
           content: {}
-      x-swagger-router-controller: KeySSIMessageQueue
   /mq/send-message/{anchorId}:
     post:
       tags:
@@ -231,7 +228,6 @@ paths:
         "404":
           description: Channel not found.
           content: {}
-      x-swagger-router-controller: KeySSIMessageQueue
   /mq/receive-message/{anchorId}:
     get:
       tags:
@@ -273,7 +269,6 @@ paths:
         "404":
           description: Channel not found.
           content: {}
-      x-swagger-router-controller: KeySSIMessageQueue
   /anchor/add/{keySSI}:
     put:
       tags:
@@ -299,7 +294,6 @@ paths:
           description: Succesufuly added of a new version for AnchorId
         "400":
           description: Invalid AnchorId
-      x-swagger-router-controller: AnchoringService
   /anchor/subscribe/{keySSI}:
     get:
       tags:
@@ -356,7 +350,6 @@ paths:
             with  the {fromVersion} it returns them all
         "400":
           description: Invalid AnchorId
-      x-swagger-router-controller: AnchoringService
   /anchor/unsubscribe/{keySSI}:
     delete:
       tags:
@@ -384,7 +377,6 @@ paths:
             with  the {fromVersion} it returns them all
         "400":
           description: Invalid AnchorId
-      x-swagger-router-controller: AnchoringService
   /anchor/versions/{keySSI}:
     get:
       tags:
@@ -413,7 +405,6 @@ paths:
           description: Returns the list of the versions of a keySSI
         "400":
           description: Invalid AnchorId
-      x-swagger-router-controller: AnchoringService
   /bricks/get-brick/{hashLink}:
     get:
       tags:
@@ -441,7 +432,6 @@ paths:
           description: Returns the encrypted content of a brick as a Buffer
         "400":
           description: Invalid hashLink
-      x-swagger-router-controller: BrickStorage
   /bricks/put-brick:
     put:
       tags:
@@ -475,7 +465,6 @@ paths:
           description: Returns the hash of the content
         "400":
           description: Invalid hashLink
-      x-swagger-router-controller: BrickStorage
   /api-hub/getAuthToken:
     get:
       tags:
@@ -510,7 +499,6 @@ paths:
       responses:
         "200":
           description: Returns an AuthToken
-      x-swagger-router-controller: APIHubAuthentication
   /api-hub/setQuota:
     post:
       tags:
@@ -525,7 +513,6 @@ paths:
       responses:
         "200":
           description: Quota set
-      x-swagger-router-controller: APIHubAuthentication
   /api-hub/setTagPolicy:
     post:
       tags:
@@ -540,7 +527,6 @@ paths:
       responses:
         "200":
           description: Quota set
-      x-swagger-router-controller: APIHubAuthentication
   /api-hub/addUserInTag:
     post:
       tags:
@@ -555,7 +541,6 @@ paths:
       responses:
         "200":
           description: User added into tag
-      x-swagger-router-controller: APIHubAuthentication
   /api-hub/addAdmin:
     put:
       tags:
@@ -570,7 +555,6 @@ paths:
       responses:
         "200":
           description: Add user in admins
-      x-swagger-router-controller: APIHubAuthentication
   /api-hub/removeAdmin:
     delete:
       tags:
@@ -595,7 +579,6 @@ paths:
       responses:
         "200":
           description: Removes user from admins
-      x-swagger-router-controller: APIHubAuthentication
   /bricks-ledger/wsms/command:
     put:
       tags:
@@ -617,7 +600,6 @@ paths:
       responses:
         "200":
           description: Command added
-      x-swagger-router-controller: BricksLedger
   /bricks-ledger/bfs/storeCommand:
     put:
       tags:
@@ -631,7 +613,6 @@ paths:
       responses:
         "200":
           description: Command added
-      x-swagger-router-controller: BricksLedger
   /bricks-ledger/pas/anchor/{hashLink}:
     put:
       tags:
@@ -649,7 +630,6 @@ paths:
       responses:
         "200":
           description: All went well.
-      x-swagger-router-controller: BricksLedger
 components:
   schemas:
     body:

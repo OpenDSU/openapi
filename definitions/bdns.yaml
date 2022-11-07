@@ -86,8 +86,3 @@ paths:
               schema:
                 type: string
                 example: Failed to initialize BDNS
-
-    x-swagger-router-controller: BdnsService
-
-
-
