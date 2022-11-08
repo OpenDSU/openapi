@@ -8,15 +8,15 @@ info:
     url: https://opensource.org/licenses/MIT
   version: 1.0.0
 servers:
-  - url: https://csc.rms.pharmaledger.app
   - url: http://localhost:8080
+  - url: https://csc.rms.pharmaledger.app
 tags:
 
   - name: APIHub APIs - BDNS
     description: Access the loaded BDNS configuration
     externalDocs:
       description: Find out more
-      url: https://privatesky.xyz
+      url: https://opendsu.com
 
 paths:
   /bdns:

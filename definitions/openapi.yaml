@@ -15,32 +15,32 @@ tags:
   description: Pub/Sub notification system that uses AnchorId as channel name.
   externalDocs:
     description: Find out more
-    url: https://privatesky.xyz
+    url: https://opendsu.com
 - name: KeySSI Message Queue
   description: Message queues system that ensures that a message gets deliveried.
   externalDocs:
     description: Find out more
-    url: https://privatesky.xyz
+    url: https://opendsu.com
 - name: Anchoring Service
   description: Service that facilitate the anchoring process
   externalDocs:
     description: Find out more
-    url: https://privatesky.xyz
+    url: https://opendsu.com
 - name: Brick Storage
   description: Storage Service for all the bricks generated from DSUs
   externalDocs:
     description: Find out more
-    url: https://privatesky.xyz
+    url: https://opendsu.com
 - name: APIHub Authentication
   description: Authentication service
   externalDocs:
     description: Find out more
-    url: https://privatesky.xyz
+    url: https://opendsu.com
 - name: Bricks Ledger
   description: Ledger Service to notarize all the anchoring commands from DSUs
   externalDocs:
     description: Find out more
-    url: https://privatesky.xyz
+    url: https://opendsu.com
 paths:
   /notifications/subscribe/{anchorId}:
     get:

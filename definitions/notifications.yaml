@@ -16,7 +16,7 @@ tags:
     description: Notification service. Send or receive messages using queue for anchorId
     externalDocs:
       description: Find out more
-      url: https://privatesky.xyz
+      url: https://opendsu.com
 
 paths:
 

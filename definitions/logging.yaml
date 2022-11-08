@@ -16,7 +16,7 @@ tags:
     description: Handles read/write log message operations
     externalDocs:
       description: Find out more
-      url: https://privatesky.xyz
+      url: https://opendsu.com
 
 paths:
   /log/add/{anchorId}/{loglevel}:

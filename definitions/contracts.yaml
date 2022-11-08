@@ -16,7 +16,7 @@ tags:
     description: Blockchain Agnostic Smart Contract support in OpenDSU
     externalDocs:
       description: Find out more
-      url: https://privatesky.xyz
+      url: https://opendsu.com
 
 paths:
   /contracts/{domain}/bdns-entries/{entry}/:
