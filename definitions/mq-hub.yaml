@@ -1,0 +1,67 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+  - url: https://csc.rms.pharmaledger.app
+tags:
+
+  - name: APIHub APIs - MQ Hub
+    description: Notification service. Send or receive messages using queue for anchorId
+    externalDocs:
+      description: Find out more
+      url: https://opendsu.com
+
+paths:
+
+  /mq/{domain}/{hashDID}/token:
+    get:
+      tags:
+        - APIHub APIs - MQ Hub
+      summary: Request to create a new JWT token
+      operationId: createJWTToken
+      parameters:
+        - name: domain
+          in: path
+          description:  DID domain for which JWT token is requested
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: hashDID
+          in: path
+          description:  sha256 hash of the DID identifier
+          example: 8wVnt83NUB3usrooEUWRhRChiyGQFDXBGC2uyt4LtndT
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: returns a list of messages received by the speciefied anchorId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTToken'
+        "500":
+          description: Not able to create a new token
+components:
+  schemas:
+    JWTToken:
+      type: object
+      properties:
+        token:
+          type: string
+        expires:
+          type: number
+      example: |
+        {"token":"2iVr8jPNNyNojJQ2EKzTz66u5rg4.oakF1h2zHGqJ8Ub5cuwH8GPXzwE3EVPnP7QZRGHYtGkohWahc8sMXTnWUngejdRQGwgkgvoqaBYLAfgFw83ML9PvgDRJvyqQtR99mCjTjBHhYCtTidySwhdJFTCyA48XzmnUN1JEd3Xnk6WUwMCruzqacfd7md84PUZdDGTqeGPNA9nFNK6LoHdfejXyfqQitd1GWiyZuVP8ESV1P8YB7WpFBmBD5eHeZiiZSxmGGmNKjFMSV9CK9EcnhoHrCEVvoYRxg1yrcyLDAtDZyxbtczpJCws1mMjoJx4KouTo7kepewfUmjJrzmQWztVgujNZSYx8J11DqUZXqLmRPbs57BZ6RkZkehEDWWrr3YViRf9tzAncb8DrABqtVeokyyTPXfonbRgyA2D9dfD1EAw3VxWR6F6B72xh68551uY9x2jyzDMzQBGH48fcoHZpH7a7zMqvNyPYqXWkAPDvazMwKF1qo782aPHUYqbubXatVae6K785LCHrUcEQPhC7gbJ7bvLQYZivW3EM9B8xyGsSyBoM2B8JAcz3WFPzZa8NsgZrU85A5SzTRGHEv6ZeoCH3UmcZjgroHSiDbZTFvwetZwA2VWV7piKCa42SNbwfBsyram2wvcwTGMtUXUzJk2Hke8SkRihFYaMzSyPBSQSRY31Ly2EXcgorkMqM29se6BUYYknWvZZLroxH4cpw9LzejUeLe5bx8Aic66ueYNxiE9kYkXVStDpdhTkPGE2HNDaDiUzhuSbSQGakwro5zxKixwsPk3XyDAE1CFyR7eFC7U3t8Bf7SGvQ5Txp7iUYVvQULeNop6NYKN.CkRvatu6DizRiw8M7C2xg41UzcSkVM1vBA6etakD62wFSLv7UNbJ2xhpQwqxppezG5Mr4ZGdDALd5yXGoosRQYp","expires":1667925722000}

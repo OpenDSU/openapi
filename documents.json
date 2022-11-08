@@ -35,6 +35,10 @@
     "path": "/definitions/notifications.yaml",
     "label": "Notifications"
   },
+  "mq-hub": {
+    "path": "/definitions/mq-hub.yaml",
+    "label": "MQ Hub"
+  },
   "eth-adapter": {
     "path": "/definitions/eth-adapter.yaml",
     "label": "Ethereum Adapter"
