@@ -1,0 +1,188 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://csc.rms.pharmaledger.app
+  - url: http://localhost:8080
+tags:
+
+  - name: APIHub APIs - Smart Contracts
+    description: Blockchain Agnostic Smart Contract support in OpenDSU
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+  /contracts/{domain}/bdns-entries/{entry}/:
+    get:
+      tags:
+        - APIHub APIs - Blockchain Agnostic Smart Contract support in OpenDSU
+      summary: Get the bdns entry using contract call for the specified domain
+      operationId: bdnsEntries
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain where the command should be executed
+          example: default
+          schema:
+            type: string
+        - name: entry
+          in: path
+          required: true
+          description: The bdns entry for the specified domain
+          example: brickStorages
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Invalid entry specified
+        "500":
+          description: Contracts not booted
+        "200":
+          description: Retrieves the specified bdns entry
+          content:
+            application/json:
+              schema:
+                type: object
+                example: |
+                  [ "$ORIGIN" ]
+  
+
+  /contracts/{domain}/latest-block-info/:
+    get:
+      tags:
+        - APIHub APIs - Blockchain Agnostic Smart Contract support in OpenDSU
+      summary: Send the lastestBlockInfo command to worker
+      operationId: latestBlockInfo
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain where the command should be executed
+          example: default
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Worker allocation failure, Invalid domain or body
+        "500":
+          description: Error executing the command
+        "200":
+          description: Command executed successfully
+
+  /contracts/{domain}/safe-command/:
+    post:
+      tags:
+        - APIHub APIs - Blockchain Agnostic Smart Contract support in OpenDSU
+      summary: Send the safe command to worker
+      operationId: safeCommand
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain where the command should be executed
+          example: default
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "400":
+          description: Worker allocation failure, Invalid domain or body
+        "500":
+          description: Error executing the command
+        "200":
+          description: Command executed successfully
+
+
+
+  /contracts/{domain}/nonced-command/:
+    post:
+      tags:
+        - APIHub APIs - Blockchain Agnostic Smart Contract support in OpenDSU
+      summary: Send the nonced command to worker
+      operationId: noncedCommand
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain where the command should be executed
+          example: default
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "400":
+          description: Worker allocation failure, Invalid domain or body
+        "500":
+          description: Error executing the command
+        "200":
+          description: Command executed successfully
+
+  /contracts/{domain}/pblock-added/:
+    post:
+      tags:
+        - APIHub APIs - Blockchain Agnostic Smart Contract support in OpenDSU
+      summary: Send pblock to validate to worker
+      operationId: pBlockAddded
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain where the command should be executed
+          example: default
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "400":
+          description: Worker allocation failure, Invalid domain or body
+        "500":
+          description: Error executing the command
+        "200":
+          description: Command executed successfully
+
+  /contracts/{domain}/validator-non-inclusion/:
+    post:
+      tags:
+        - APIHub APIs - Blockchain Agnostic Smart Contract support in OpenDSU
+      summary: Set domain validator as 'non inclusion' to consensus phase
+      operationId: validatorNotInclusion
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: The domain where the command should be executed
+          example: default
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "400":
+          description: Worker allocation failure, Invalid domain or body
+        "500":
+          description: Error executing the command
+        "200":
+          description: Command executed successfully

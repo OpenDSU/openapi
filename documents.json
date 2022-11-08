@@ -38,5 +38,9 @@
   "eth-adapter": {
     "path": "/definitions/eth-adapter.yaml",
     "label": "Ethereum Adapter"
+  },
+  "contracts": {
+    "path": "/definitions/contracts.yaml",
+    "label": "Contracts"
   }
 }
