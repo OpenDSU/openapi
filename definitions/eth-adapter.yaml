@@ -1,0 +1,104 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: https://localhost:8080
+  - url: http://localhost:8080
+tags:
+
+  - name: Ethereum Adapter APIs
+    description: Ethereum Adapter APIs
+    externalDocs:
+      description: Find out more
+      url: https://privatesky.xyz
+
+paths:
+
+  /addAnchor/{keySSI}:
+    put:
+      tags:
+        - Ethereum Adapter APIs
+      description: Adds an anchor into the Ethereum blockchain network
+      operationId: addAnchor
+      parameters:
+        - name: keySSI
+          in: path
+          required: true
+          description: zero access key keySSI base58 encoded
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                hash:
+                  type: object
+                  properties:
+                    newHashLinkSSI:
+                      type: string
+                    lastHashLinkSSI:
+                      type: string
+                zkp:
+                  type: string
+                digitalProof:
+                  type: object
+                  properties:
+                    signature:
+                      type: string
+                    publicKey:
+                      type: string
+      responses:
+        "200":
+          description: Successfully added anchor to the blockchain
+        "428":
+          description: Smart contract execution failed or error decoding keySSI
+
+  /getAnchorVersions/{keySSI}:
+    get:
+      tags:
+        - Ethereum Adapter APIs
+      description: Get the hashlinks associated with a keySSI
+      operationId: getAnchorVersions
+      parameters:
+        - name: keySSI
+          in: path
+          required: true
+          description: zero access key keySSI base58 encoded
+          schema:
+            type: string
+      responses:
+        "500":
+          description: Error invoking the smart contract in order to get the hashlinks
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Unable to ... because ...
+        "200":
+          description: Successfully invoked the smart contract and returns the hashlinks for the keySSI
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /check/:
+    get:
+      tags:
+        - Ethereum Adapter APIs
+      description: Health Check for Smart contract method. It will determine if the smart contract is available and configured properlly
+      operationId: heatlCheck
+      responses:
+        "200":
+          description: Successfully invoked the health check method in the smart contract
+        "500":
+          description: Failed to invoke the smart contract

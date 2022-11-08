@@ -34,5 +34,9 @@
   "notifications": {
     "path": "/definitions/notifications.yaml",
     "label": "Notifications"
+  },
+  "eth-adapter": {
+    "path": "/definitions/eth-adapter.yaml",
+    "label": "Ethereum Adapter"
   }
 }
