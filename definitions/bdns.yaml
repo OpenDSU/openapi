@@ -19,7 +19,6 @@ tags:
       url: https://privatesky.xyz
 
 paths:
-
   /bdns:
     get:
       tags:
@@ -30,7 +29,7 @@ paths:
         "200" :
           description:  Returns the loaded BDNS configuration
           content:
-            json/object:
+            application/json:
               schema:
                 type: object
                 example: |
