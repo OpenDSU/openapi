@@ -8,8 +8,8 @@ info:
     url: https://opensource.org/licenses/MIT
   version: 1.0.0
 servers:
-  - url: https://localhost:8080
   - url: http://localhost:8080
+  - url: https://csc.rms.pharmaledger.app
 tags:
 
   - name: APIHub APIs - Static Server
