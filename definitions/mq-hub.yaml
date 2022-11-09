@@ -150,7 +150,7 @@ paths:
         "500":
           description: Not able to create a new token
 
-  /{domain}/delete/{hashDID}/{messageID}/{signatureOfDid}:
+  /mq/{domain}/delete/{hashDID}/{messageID}/{signatureOfDid}:
     delete:
       tags:
         - APIHub APIs - MQ Hub
@@ -199,7 +199,7 @@ paths:
         "500":
           description: An error occured during deleting message from queue.
 
-  /{domain}/take/{hashDID}/{messageID}/{signatureOfDid}:
+  /mq/{domain}/take/{hashDID}/{messageID}/{signatureOfDid}:
     get:
       tags:
         - APIHub APIs - MQ Hub

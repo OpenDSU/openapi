@@ -11,6 +11,10 @@
     "path":"/definitions/bdns.yaml",
     "label": "BDNS"
   },
+  "config": {
+    "path": "/definitions/config.yaml",
+    "label": "Domain Config"
+  },
   "bricking": {
     "path": "/definitions/bricking.yaml",
     "label": "Bricking"

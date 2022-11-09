@@ -1,0 +1,97 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+  - url: https://csc.rms.pharmaledger.app
+tags:
+
+  - name: APIHub APIs - Domain Configuration
+    description: Get and update domain configurations
+    externalDocs:
+      description: Find out more
+      url: https://opendsu.com
+
+paths:
+  /config/{domain}:
+    get:
+      tags:
+        - APIHub APIs - Domain Configuration
+      summary: Get the configuration for the specified domain
+      operationId: domainConfiguration
+      parameters:
+        - name: domain
+          in: path
+          description: domain for which configuration is needed
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns the configuration for the specified domain
+          content:
+            application/json:
+              schema:
+                type: object
+                example: |
+                  {"anchoring":{"type":"FS","option":{"enableBricksLedger":false},"commands":{"addAnchor":"anchor"}},"enable":["mq"],"mq_fsQueueLength":1000}
+        "404":
+          description: Domain not found
+    put:
+      tags:
+        - APIHub APIs - Domain Configuration
+      summary: Update the configuration for the specified domain
+      operationId: updateDomainConfiguration
+      parameters:
+        - name: domain
+          in: path
+          description: domain for which configuration is needed
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Operation completed successfully
+        "400":
+          description: Invalid domain configuration was specified
+        "500":
+          description: An error occured during domain configuration update
+  /config/{domain}/keyssi:
+    get:
+      tags:
+        - APIHub APIs - Domain Configuration
+      summary: Get the domain keySSI for the contracts DSU speficied inside contracts constitution or null
+      operationId: domainKeySSIContractsConstitution
+      parameters:
+        - name: domain
+          in: path
+          description: domain for which keySSI is needed
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Returns the domain keySSI for the contracts DSU or null if no contracts DSU was configured
+        "404":
+          description: Domain not found
+
