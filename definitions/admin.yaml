@@ -1,0 +1,262 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+  - url: https://csc.rms.pharmaledger.app
+tags:
+
+  - name: APIHub APIs - Admin Component
+    description: Admin Component is usefull in order to setup multiple domains across different organizations that will use the same installlation of APIHub
+    externalDocs:
+      description: Find out more
+      url: https://opendsu.com
+
+paths:
+  /admin/{mainDomain}/addDomain:
+    post:
+      tags:
+        - APIHub APIs - Admin Component
+      summary: Insert the companny domain based on the existing mainDomain. Companies domains are stored in "adminEnclave"
+      operationId: addCompanyDomainInAdminEnclave
+      parameters:
+        - name: mainDomain
+          in: path
+          description: domain for which configuration is needed
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                domainName:
+                  type: string
+                  example: "csc.nvs"
+                timestamp:
+                  type: number
+                  example: 1668020801397
+                signature:
+                  type: string
+                  example: "NOT_IMPLEMENTED"
+                cloneFromDomain:
+                  type: string
+                  example: "csc"
+      responses:
+        "200":
+          description: Operation completed successfully
+        "403":
+          description: requestyBody does not contain cloneFromDomain property
+        "500":
+          description: An error occured
+
+  /admin/{mainDomain}/disableDomain:
+    post:
+      tags:
+        - APIHub APIs - Admin Component
+      summary: Disable the companny domain. Disabled companies domains will hold an "active:false" flag in "adminEnclave"
+      operationId: disableCompanyDomainInAdminEnclave
+      parameters:
+        - name: mainDomain
+          in: path
+          description: domain for which configuration is needed
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                domainName:
+                  type: string
+                  example: "csc.nvs"
+                timestamp:
+                  type: number
+                  example: 1668020801397
+                signature:
+                  type: string
+                  example: "NOT_IMPLEMENTED"
+
+      responses:
+        "200":
+          description: Operation completed successfully
+        "500":
+          description: An error occured
+  /admin/{mainDomain}/addAdmin:
+    post:
+      tags:
+        - APIHub APIs - Admin Component
+      summary: Add the DID of the admin in the admins table of the adminEnclave.
+      operationId: AddAdmin
+      parameters:
+        - name: mainDomain
+          in: path
+          description: domain for which configuration is needed
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                did:
+                  type: string
+                  example: "did:ssi:name:vault.nvs:Demiurge/csc.admin"
+                timestamp:
+                  type: number
+                  example: 1668020801397
+                signature:
+                  type: string
+                  example: "NOT_IMPLEMENTED"
+
+      responses:
+        "200":
+          description: Operation completed successfully
+        "500":
+          description: An error occured
+  /admin/{mainDomain}/addDomainAdmin:
+    post:
+      tags:
+        - APIHub APIs - Admin Component
+      summary: Add the DID of the admin in the admins table of the adminEnclave.
+      operationId: AddDomainAdmin
+      parameters:
+        - name: mainDomain
+          in: path
+          description: domain for which configuration is needed
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                domain:
+                  type: string
+                  example: "nvs.csc"
+                did:
+                  type: string
+                  example: "did:ssi:name:vault.nvs:Demiurge/csc.admin"
+                timestamp:
+                  type: number
+                  example: 1668020801397
+                signature:
+                  type: string
+                  example: "NOT_IMPLEMENTED"
+
+      responses:
+        "200":
+          description: Operation completed successfully
+        "500":
+          description: An error occured
+  /admin/{mainDomain}/storeVariable:
+    post:
+      tags:
+        - APIHub APIs - Admin Component
+      summary: Store comnpany variables needed for booting new wallets. Them are stored in variables table of the "adminEnclave"
+      operationId: storeVariable
+      parameters:
+        - name: mainDomain
+          in: path
+          description: domain for which configuration is needed
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dnsDomain:
+                  type: string
+                  example: "pharmaledger.app"
+                variableName:
+                  type: string
+                  example: "companyName"
+                variableContent:
+                  type: string
+                  example: "PLA"
+                timestamp:
+                  type: number
+                  example: 1668020801397
+                signature:
+                  type: string
+                  example: "NOT_IMPLEMENTED"
+
+      responses:
+        "200":
+          description: Operation completed successfully
+        "500":
+          description: An error occured
+
+  /admin/{mainDomain}/registerTemplate:
+    post:
+      tags:
+        - APIHub APIs - Admin Component
+      summary: Register templates and hook default APIHub default deployment files with file templates that will be filled with variables stored in the previous API. Templates are stored in table templates of the "adminEnclave"
+      operationId: registerTemplate
+      parameters:
+        - name: mainDomain
+          in: path
+          description: domain for which configuration is needed
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  example: "/demiurge-wallet/loader/environment.js"
+                content:
+                  type: string
+                  example: |
+                    { "appName": "Demiurge", "vault": "server", "agent": "browser", "system": "any", "browser": "any", "mode": "dev-secure", "vaultDomain": "${vaultDomain}", "didDomain": "${didDomain}", "enclaveType":"WalletDBEnclave", "companyName": "${companyName}", "sw": false, "pwa": false}
+                timestamp:
+                  type: number
+                  example: 1668020801397
+                signature:
+                  type: string
+                  example: NOT_IMPLEMENTED
+
+      responses:
+        "200":
+          description: Operation completed successfully
+        "500":
+          description: An error occured          

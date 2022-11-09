@@ -15,6 +15,10 @@
     "path": "/definitions/config.yaml",
     "label": "Domain Config"
   },
+  "admin": {
+    "path": "/definitions/admin.yaml",
+    "label": "Admin"
+  },
   "bricking": {
     "path": "/definitions/bricking.yaml",
     "label": "Bricking"
