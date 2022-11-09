@@ -54,7 +54,208 @@ paths:
                 $ref: '#/components/schemas/JWTToken'
         "500":
           description: Not able to create a new token
+
+  /mq/{domain}/put/{hashDID}:
+    put:
+      security:
+        - authorization: []
+      tags:
+        - APIHub APIs - MQ Hub
+      summary: PUT a new message on MQ
+      operationId: putMQMessage
+      parameters:
+        - name: domain
+          in: path
+          description:  DID domain
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: hashDID
+          in: path
+          description:  sha256 hash of the DID identifier
+          example: 8wVnt83NUB3usrooEUWRhRChiyGQFDXBGC2uyt4LtndT
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: returns a list of messages received by the speciefied anchorId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTToken'
+        "405":
+          description: Domain doesn't have mq component enabled
+        "403":
+          description: No token was provided or invalid token
+        "500":
+          description: Not able to create a new token
+  /mq/{domain}/get/{hashDID}/{signatureOfDid}:
+    get:
+      tags:
+        - APIHub APIs - MQ Hub
+      summary: Get a message from MQ
+      operationId: getMQMessage
+      parameters:
+        - name: domain
+          in: path
+          description:  DID domain
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: hashDID
+          in: path
+          description:  sha256 hash of the DID identifier
+          example: 8wVnt83NUB3usrooEUWRhRChiyGQFDXBGC2uyt4LtndT
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: signatureOfDid
+          in: path
+          description:  Signature of the signed token using the same DID document as for hashedDID
+          example: 30460221009cee7b5876a30f7e590673eaefe75497341c4927276237b4321888d48798ddfe02210083d8da4308f9dea539023a773a15ff74e6c7e64b7983f772987fbfbbca26488e
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: returned a message for this DID
+          content:
+            application/json:
+              schema:
+                type: object
+        "204":
+          description: No content yet.
+        "405":
+          description: Domain doesn't have mq component enabled
+        "403":
+          description: No token was provided or invalid token
+        "500":
+          description: Not able to create a new token
+
+  /{domain}/delete/{hashDID}/{messageID}/{signatureOfDid}:
+    delete:
+      tags:
+        - APIHub APIs - MQ Hub
+      summary: Delete a message from MQ
+      operationId: deleteMQMessage
+      parameters:
+        - name: domain
+          in: path
+          description:  DID domain
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: hashDID
+          in: path
+          description:  sha256 hash of the DID identifier
+          example: 8wVnt83NUB3usrooEUWRhRChiyGQFDXBGC2uyt4LtndT
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: messageID
+          in: path
+          description:  message ID that should be deleted from MQ
+          example: 56WGqhXyP8N54zbRdTCEXRXWaLW236Nktow3XN7NFBdY/1668006644827
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: signatureOfDid
+          in: path
+          description:  Signature of the signed token using the same DID document as for hashedDID
+          example: 30460221009cee7b5876a30f7e590673eaefe75497341c4927276237b4321888d48798ddfe02210083d8da4308f9dea539023a773a15ff74e6c7e64b7983f772987fbfbbca26488e
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Operation executed successfully
+        "500":
+          description: An error occured during deleting message from queue.
+
+  /{domain}/take/{hashDID}/{messageID}/{signatureOfDid}:
+    get:
+      tags:
+        - APIHub APIs - MQ Hub
+      summary: Read and delete a message from MQ. The message is deleted from MQ prior to serving it to client
+      operationId: takeMQMessage
+      parameters:
+        - name: domain
+          in: path
+          description:  DID domain
+          example: default
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: hashDID
+          in: path
+          description:  sha256 hash of the DID identifier
+          example: 8wVnt83NUB3usrooEUWRhRChiyGQFDXBGC2uyt4LtndT
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: messageID
+          in: path
+          description:  message ID that should be deleted from MQ
+          example: 56WGqhXyP8N54zbRdTCEXRXWaLW236Nktow3XN7NFBdY/1668006644827
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - name: signatureOfDid
+          in: path
+          description:  Signature of the signed token using the same DID document as for hashedDID
+          example: 30460221009cee7b5876a30f7e590673eaefe75497341c4927276237b4321888d48798ddfe02210083d8da4308f9dea539023a773a15ff74e6c7e64b7983f772987fbfbbca26488e
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Operation executed successfully
+        "500":
+          description: An error occured during reading or deleting message from queue.
+
+
+
 components:
+  securitySchemes:
+    authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     JWTToken:
       type: object
