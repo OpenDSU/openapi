@@ -103,3 +103,20 @@ paths:
           description: Brick not found
         "500":
           description: Brick domain not found
+
+  /bricksFabric/add:
+    put:
+      tags:
+        - APIHub APIs - Bricks Fabric
+      summary: Store transactions in bricks storage. Usually the stored data is represented by the anchorData. When maximum number of transactionsPerBlock is reached, the block is built and stored in bricks storage.
+      operationId: storeTransaction
+      requestBody:
+        description: Body will contain the anchor data for the current transaction
+        content:
+          application/octet-stream: {}
+      responses:
+        "201":
+          description: Transaction data was stored successfully
+        "500":
+          description: Failed to store transaction
+
