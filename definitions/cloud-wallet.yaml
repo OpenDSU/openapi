@@ -11,9 +11,12 @@ servers:
   - url: http://localhost:8080
   - url: https://csc.rms.pharmaledger.app
 tags:
-
   - name: APIHub APIs - Cloud Wallet
-    description: Provides operations using DSU workers by simulating Service Workers
+    description: Provides operations on wallets using DSU workers
+  - name: APIHub APIs - Stream Wallet
+    description: Provides operations on wallets using streams
+  - name: APIHub APIs - Iframe Wallet
+    description: Provides operations on wallets using Service Workers
     externalDocs:
       description: Find out more
       url: https://opendsu.com
@@ -76,11 +79,92 @@ paths:
         "400":
           description: Worker resolver error
 
-
+  /stream/{domain}/create-wallet/{userId}:
+    put:
+      tags:
+        - APIHub APIs - Stream Wallet
+      summary: Create a wallet for the specified "userId" on the specified "domain". The operation is creating the enclaves and storing the enclaveKeySSIs in the environment.json configuration. The "userId" is stored in metadata.json file.
+      operationId: createStreamWallet
+      parameters:
+        - name: domain
+          in: path
+          description: wallet domain
+          example: default
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          description: userId
+          example: dev.username
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Operation handled with success. Returns the keySSI of the new created wallet
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 29fgyfTQXJmJNni42zuJu3NXHgtUuXk3318NMMTrYKfj1gwAttt16rKq3vPCUjFV3KZeF9HJnaZnW4FnN7t7zBQFKjdXBwX
+        "500":
+          description: Internal stream component error
+  /stream/{keySSI}/{requestedPath}:
+    get:
+      tags:
+        - APIHub APIs - Stream Wallet
+      summary: Streaming the content of the "requestedPath" from the wallet identified with provided "keySSI"
+      parameters:
+        - name: range
+          in: header
+          description: Range Standard Header. It should respect the standard https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Range
+          required: true
+          schema:
+            type: string
+            example: bytes=200-1000
+        - name: keySSI
+          in: path
+          description: keySSI of the wallet
+          example: default
+          required: true
+          schema:
+            type: string
+        - name: requestedPath
+          in: path
+          description: Requested wallet path desired to be streamed. If it is empty, the whole wallet will be streamed.
+          example: /bigFile.mp4
+          required: true
+          schema:
+            type: string
+      responses:
+        "400":
+          description: Requires Range Header
+        "206":
+          description: Partial content was send according with the range header
+          headers:
+            Content-Range:
+              schema:
+                type: string
+                example: "bytes 200-1000/50000"
+            Accept-Ranges:
+              schema:
+                type: string
+                example: "bytes"
+            Content-Length:
+              schema:
+                type: number
+                example: 800
+            Content-Type:
+              schema:
+                type: string
+                example: "video/mp4"
+        "500":
+          description: Internal stream component error
   /iframe/{keySSI}/{filePath}:
     get:
       tags:
-        - APIHub APIs - Cloud Wallet
+        - APIHub APIs - Iframe Wallet
       summary: Serves the requested content, identified by the appended path, using DSU workers. It is used only for keeping backwards compatibility with old wallets that are still using SWs.
       operationId: getCodeResource
       deprecated: true
@@ -109,7 +193,7 @@ paths:
   /{walletName}/loader/iframe/{keySSI}/{filePath}:
     get:
       tags:
-        - APIHub APIs - Cloud Wallet
+        - APIHub APIs - Iframe Wallet
       summary: Serves the requested content, identified by the appended path, using DSU workers. It is used only for keeping backwards compatibility with old wallets that are still using SWs.
       operationId: getIframeCodeResource
       deprecated: true
