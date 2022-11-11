@@ -13,7 +13,7 @@ servers:
 tags:
 
   - name: APIHub APIs - Installation Info
-    description: Provides information about current workspace and OpenDSU-SDK installation
+    description: Provides information about the current workspace and OpenDSU-SDK installation.
     externalDocs:
       description: Find out more
       url: https://opendsu.com

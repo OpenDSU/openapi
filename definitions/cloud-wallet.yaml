@@ -167,7 +167,6 @@ paths:
         - APIHub APIs - Iframe Wallet
       summary: Serves the requested content, identified by the appended path, using DSU workers. It is used only for keeping backwards compatibility with old wallets that are still using SWs.
       operationId: getCodeResource
-      deprecated: true
       parameters:
         - name: keySSI
           in: path
@@ -196,7 +195,6 @@ paths:
         - APIHub APIs - Iframe Wallet
       summary: Serves the requested content, identified by the appended path, using DSU workers. It is used only for keeping backwards compatibility with old wallets that are still using SWs.
       operationId: getIframeCodeResource
-      deprecated: true
       parameters:
         - name: walletName
           in: path
