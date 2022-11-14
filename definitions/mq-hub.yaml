@@ -47,7 +47,7 @@ paths:
             type: string
       responses:
         "200":
-          description: returns a list of messages received by the speciefied anchorId
+          description: returns a JWT signed token
           content:
             application/json:
               schema:
@@ -75,7 +75,7 @@ paths:
             type: string
         - name: hashDID
           in: path
-          description:  sha256 hash of the DID identifier
+          description:  sha256 hash of the "receiver" DID identifier
           example: 8wVnt83NUB3usrooEUWRhRChiyGQFDXBGC2uyt4LtndT
           required: true
           style: simple
@@ -89,11 +89,7 @@ paths:
               type: object
       responses:
         "200":
-          description: returns a list of messages received by the speciefied anchorId
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JWTToken'
+          description: Operation successfully added the message to the hashDID queue
         "405":
           description: Domain doesn't have mq component enabled
         "403":

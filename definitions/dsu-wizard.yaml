@@ -151,7 +151,6 @@ paths:
           required: true
           description: |
             The domain on which the *__copy__* command should be executed
-            <br/> ????? It is not used
           schema:
             type: string
             example: default

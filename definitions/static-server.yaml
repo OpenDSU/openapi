@@ -60,7 +60,7 @@ paths:
   /files/upload/{folder}:
     post:
       tags:
-        - APIHub APIs - Upload
+        - APIHub APIs - Static Server
       summary: Upload the contents of a file into the specified folder
       operationId: uploadFile
       parameters:
@@ -90,7 +90,7 @@ paths:
   /files/download/{filepath}:
     get:
       tags:
-        - APIHub APIs - Upload
+        - APIHub APIs - Static Server
       summary: Download the contents of the file identified by the filepath
       operationId: downloadFile
       parameters:
