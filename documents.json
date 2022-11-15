@@ -62,5 +62,9 @@
   "forward-request": {
     "path": "/definitions/forward-request.yaml",
     "label": "Request Forwarder"
+  },
+  "main-dsu": {
+    "path": "/definitions/main-dsu.yaml",
+    "label": "Main DSU"
   }
 }

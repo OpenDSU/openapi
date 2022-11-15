@@ -1,0 +1,30 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+  - url: https://csc.rms.pharmaledger.app
+tags:
+  - name: APIHub APIs - Get MainDSU
+    externalDocs:
+      description: Find out more
+      url: https://opendsu.com
+
+paths:
+  /getSSIForMainDSU:
+    get:
+      tags:
+        - APIHub APIs - Get MainDSU
+      summary: Return the static DSU that can be set as a main context in various scenarious
+      operationId: getSSIForMainDSU
+      responses:
+        "200":
+          description: Operation handled with success. The Key SSI for the mainDSU will be returned
+        "500":
+          description: Failed to create seedSSI
