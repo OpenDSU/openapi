@@ -1,0 +1,66 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+  - url: https://csc.rms.pharmaledger.app
+tags:
+  - name: APIHub APIs - Request Forwarder
+    externalDocs:
+      description: Find out more
+      url: https://opendsu.com
+
+security:
+  - authorization: []
+
+paths:
+  /forwardRequestForAuthenticatedClient:
+    post:
+      tags:
+        - APIHub APIs - Request Forwarder
+      summary: Create a new request from APIHub with the provided options and body
+      operationId: forwardRequestForAuthenticatedClient
+      requestBody:
+        description: Options for the new request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/body'
+      responses:
+        "200":
+          description: Operation handled with success. Status code may be returned from forwarded request's response.
+        "403":
+          description: Unauthorized access
+        "400":
+          description: Bad request. Request URL was not provided
+        "500":
+          description: Error on request
+
+components:
+  schemas:
+    body:
+      type: object
+      properties:
+        options:
+          type: object
+          properties:
+            method:
+              type: string
+              enum: ["POST","GET","DELETE","PUT","OPTIONS"]
+        body:
+          type: object
+        url:
+          type: string
+          example: "https://inner.network:8090"
+  securitySchemes:
+    authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+

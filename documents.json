@@ -58,5 +58,9 @@
   "secrets": {
     "path": "/definitions/secrets.yaml",
     "label": "Secrets"
+  },
+  "forward-request": {
+    "path": "/definitions/forward-request.yaml",
+    "label": "Request Forwarder"
   }
 }
