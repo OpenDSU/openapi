@@ -1,0 +1,100 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+  - url: https://csc.rms.pharmaledger.app
+tags:
+
+  - name: APIHub APIs - Installation Details
+    description: Provides information about the current APIHub running instance toghether with details about current workspace and OpenDSU-SDK installation if it's possible.
+    externalDocs:
+      description: Find out more
+      url: https://opendsu.com
+
+paths:
+
+  /installation-details:
+    get:
+      tags:
+        - APIHub APIs - Installation Details
+      summary: The service is presenting resource usages like userCPUTime, systemCPUTime, uptime and number of reads/writes using FS. Also the commits numbers of the workspace and OpenDSU-SDK installation are provided.
+      responses:
+        "200":
+          description: Returns informations about current resource usages as well as the workspace and OpenDSU-SDK commits numbers.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  $ref : '#/components/schemas/APIHubInstanceDetails'
+
+components:
+  schemas:
+    APIHubInstanceDetails:
+      type: object
+      properties:
+        commitNo:
+          type: string
+        commitMessage:
+          type: string
+        resourceUsage:
+          type: object
+          properties:
+            userCPUTime:
+              type: number
+              example: 2718000
+            systemCPUTime:
+              type: number
+              example: 906000
+            maxRSS:
+              type: number
+              example: 235008
+            sharedMemorySize:
+              type: number
+              example: 0
+            unsharedDataSize:
+              type: number
+              example: 0
+            unsharedStackSize:
+              type: number
+              example: 0
+            minorPageFault:
+              type: number
+              example: 0
+            majorPageFault:
+              type: number
+              example: 226256
+            swappedOut:
+              type: number
+              example: 0
+            fsRead:
+              type: number
+              example: 708
+            fsWrite:
+              type: number
+              example: 27
+            ipcSent:
+              type: number
+              example: 5
+            ipcReceived:
+              type: number
+              example: 2
+            signalsCount:
+              type: number
+              example: 0
+            voluntaryContextSwitches:
+              type: number
+              example: 0
+            involuntaryContextSwitches:
+              type: number
+              example: 0
+            uptime:
+              type: number
+              example: 47.777584

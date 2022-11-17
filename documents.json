@@ -1,7 +1,11 @@
 {
   "installation": {
-    "path": "/definitions/installation.yaml",
+    "path": "/definitions/installation-details.yaml",
     "label": "Installation Details"
+  },
+  "throttling-readiness": {
+    "path": "/definitions/throttling-readiness.yaml",
+    "label": "Throttling & Readiness"
   },
   "anchoring": {
     "path": "/definitions/anchoring.yaml",

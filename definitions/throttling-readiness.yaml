@@ -1,0 +1,72 @@
+openapi: 3.0.1
+info:
+  title: OpenDSU communication APIs
+  description: This a project to model OpenDSU communication systems using OpenAPI
+    standard
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+  - url: https://csc.rms.pharmaledger.app
+tags:
+
+  - name: APIHub APIs - Throttling & Readiness
+    description: Provides information for the readiness of APIHub to accept requests. The token bucket algorithm is used in order to implement the management of requests and to avoid any possible flood requests that may came from a DDoS type attack.
+    externalDocs:
+      description: Find out more
+      url: https://opendsu.com
+
+paths:
+  /ready-probe:
+    get:
+      tags:
+        - APIHub APIs - Throttling & Readiness
+      summary: For the throtled APIHubs instances the service is responding with the configured token limit and the remaining tokens. If the limit is exceeded 429 HTTP status code is returned.
+      responses:
+        "200":
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: Request tokens limit.
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining tokens
+          description: Returns informations about current thortling numbers or the string "Server ready"  if the APIHub instance is not using the rate limit mechanism
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  remainingTokens:
+                    type: number
+                    example: 59900
+                  tokenLimit:
+                    type: number
+                    example: 60000
+
+        "429":
+          description: Rate limit exceeded
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: Request tokens limit.
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining tokens
+        "500":
+          description: Internal throtler middleware error
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: Request tokens limit.
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining tokens
