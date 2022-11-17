@@ -13,7 +13,7 @@ servers:
 tags:
 
   - name: APIHub APIs - Installation Details
-    description: Provides information about the current APIHub running instance toghether with details about current workspace and OpenDSU-SDK installation if it's possible.
+    description: Provides information about the current APIHub running instance together with details about current workspace and OpenDSU-SDK installation if it's possible.
     externalDocs:
       description: Find out more
       url: https://opendsu.com
@@ -27,23 +27,31 @@ paths:
       summary: The service is presenting resource usages like userCPUTime, systemCPUTime, uptime and number of reads/writes using FS. Also the commits numbers of the workspace and OpenDSU-SDK installation are provided.
       responses:
         "200":
-          description: Returns informations about current resource usages as well as the workspace and OpenDSU-SDK commits numbers.
+          description: Returns details about current resource usages as well as the workspace and OpenDSU-SDK commits numbers.
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties:
-                  $ref : '#/components/schemas/APIHubInstanceDetails'
+                $ref : '#/components/schemas/APIHubInstanceDetails'
 
 components:
   schemas:
     APIHubInstanceDetails:
       type: object
       properties:
-        commitNo:
-          type: string
-        commitMessage:
-          type: string
+        opendsu-sdk:
+          type: object
+          properties:
+            commitNo:
+              type: string
+            commitMessage:
+              type: string
+        workspace:
+          type: object
+          properties:
+            commitNo:
+              type: string
+            commitMessage:
+              type: string
         resourceUsage:
           type: object
           properties:

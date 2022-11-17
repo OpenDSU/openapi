@@ -13,7 +13,7 @@ servers:
 tags:
 
   - name: APIHub APIs - Throttling & Readiness
-    description: Provides information for the readiness of APIHub to accept requests. The token bucket algorithm is used in order to implement the management of requests and to avoid any possible flood requests that may came from a DDoS type attack.
+    description: Provides information for the readiness of APIHub to accept requests. The token bucket algorithm is used in order to implement the management of requests and to avoid any possible flood requests that may come from a DDoS type attack.
     externalDocs:
       description: Find out more
       url: https://opendsu.com
@@ -23,7 +23,7 @@ paths:
     get:
       tags:
         - APIHub APIs - Throttling & Readiness
-      summary: For the throtled APIHubs instances the service is responding with the configured token limit and the remaining tokens. If the limit is exceeded 429 HTTP status code is returned.
+      summary: For the throttled APIHubs instances the service is responding with the configured token limit and the remaining tokens. If the limit is exceeded 429 HTTP status code is returned.
       responses:
         "200":
           headers:
@@ -35,7 +35,7 @@ paths:
               schema:
                 type: integer
               description: Remaining tokens
-          description: Returns informations about current thortling numbers or the string "Server ready"  if the APIHub instance is not using the rate limit mechanism
+          description: Returns informations about current throttling numbers or the string "Server ready"  if the APIHub instance is not using the rate limit mechanism
           content:
             application/json:
               schema:
@@ -60,7 +60,7 @@ paths:
                 type: integer
               description: Remaining tokens
         "500":
-          description: Internal throtler middleware error
+          description: Internal throttling middleware error
           headers:
             X-RateLimit-Limit:
               schema:
